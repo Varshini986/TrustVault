@@ -1,12 +1,11 @@
 # AI-assisted work log
 
-This log records the work performed in the available workspace. All five
-entries are dated 2026-10-22 because this workspace contains only the current
-session's snapshot; they are not presented as a week of historical activity.
-The folder is not a Git repository and Git is unavailable in this environment,
-so there are no commit links to provide. Those links and the requested public
-history must be added when this work is moved into the project's real Git
-repository. I will not invent commits or prior prompts.
+This log records the work performed in the available workspace. Entries are
+dated 2026-10-22 because this workspace contains only the current session's
+snapshot; they are not presented as a week of historical activity. The
+security changes were committed together when the repository became available;
+the links point to that real commit. No earlier commits or prompts are
+invented.
 
 ## 2026-10-22 — Inspect document authorization
 
@@ -20,8 +19,7 @@ repository. I will not invent commits or prior prompts.
   document list, detail, download, edit, grant, and delete surfaces as an
   ungranted user. `test_ungranted_user_cannot_reach_document_through_any_route`
   now verifies both denial and that the document remains unchanged.
-- **Commit:** Unavailable; this snapshot has no Git repository or commit
-  history.
+- **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
 ## 2026-10-22 — Separate edit from sharing authority
 
@@ -36,8 +34,7 @@ repository. I will not invent commits or prior prompts.
 - **Did instead:** Grant/revoke/delete now require document ownership or the
   explicit admin override; edit grantees can still edit title/category. Added
   `test_edit_grant_cannot_manage_access_or_delete`.
-- **Commit:** Unavailable; this snapshot has no Git repository or commit
-  history.
+- **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
 ## 2026-10-22 — Check audit-chain correctness
 
@@ -52,8 +49,7 @@ repository. I will not invent commits or prior prompts.
   before reading the chain tip. Added
   `test_audit_chain_verification_detects_database_tampering`; the documented
   domain-change/audit-append transaction gap remains accepted.
-- **Commit:** Unavailable; this snapshot has no Git repository or commit
-  history.
+- **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
 ## 2026-10-22 — Scope search results
 
@@ -67,8 +63,7 @@ repository. I will not invent commits or prior prompts.
 - **Did instead:** Scope category facets to the same owned/granted document
   predicate as search results; reject malformed and reversed date ranges.
   Added `test_search_is_scoped_and_supports_date_filters`.
-- **Commit:** Unavailable; this snapshot has no Git repository or commit
-  history.
+- **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
 ## 2026-10-22 — Verify tests and operator documentation
 
@@ -81,8 +76,7 @@ repository. I will not invent commits or prior prompts.
   Also, a local test run initially lacked the declared pytest dependency.
 - **Did instead:** Corrected the expectation to 302 and installed only the
   dependencies already declared in `requirements.txt`; reran the suite.
-- **Commit:** Unavailable; this snapshot has no Git repository or commit
-  history.
+- **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
 ## Reused context
 

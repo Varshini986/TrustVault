@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: trustvault-demo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 1 --threads 4 --timeout 60 app:app
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: TRUSTVAULT_SECRET_KEY
+        generateValue: true
+      - key: TRUSTVAULT_HTTPS
+        value: "1"
+      - key: TRUSTVAULT_DEMO_SEED
+        value: "1"
+      - key: TRUSTVAULT_DEMO_ADMIN_PASSWORD
+        generateValue: true
+      - key: TRUSTVAULT_DEMO_OWNER_PASSWORD
+        generateValue: true
+      - key: TRUSTVAULT_DEMO_VIEWER_PASSWORD
+        generateValue: true

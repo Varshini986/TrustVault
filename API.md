@@ -25,6 +25,7 @@ return 404. Unauthenticated requests to protected pages redirect to sign-in.
 | Method | Path | Allowed callers | Behavior |
 |---|---|---|---|
 | GET | `/` | Anyone | Landing page or redirect to document list |
+| GET | `/healthz` | Anyone | Non-sensitive hosting health check (`{"status":"ok"}`) |
 | GET, POST | `/register` | Anyone | Creates an `owner`; submitted roles are ignored |
 | GET, POST | `/login` | Anyone | Authenticates and creates a session |
 | POST | `/logout` | Any signed-in user | Ends the session |

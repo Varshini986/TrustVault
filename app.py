@@ -9,7 +9,7 @@ from functools import wraps
 from pathlib import Path
 
 from flask import (
-    Flask, abort, flash, g, redirect, render_template, request,
+    Flask, abort, flash, g, jsonify, redirect, render_template, request,
     send_file, session, url_for
 )
 from flask_wtf.csrf import CSRFError, CSRFProtect
@@ -30,6 +30,10 @@ def create_app(test_config=None):
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=os.environ.get("TRUSTVAULT_HTTPS", "0") == "1",
+        DEMO_SEED_ENABLED=os.environ.get("TRUSTVAULT_DEMO_SEED", "0") == "1",
+        DEMO_ADMIN_PASSWORD=os.environ.get("TRUSTVAULT_DEMO_ADMIN_PASSWORD"),
+        DEMO_OWNER_PASSWORD=os.environ.get("TRUSTVAULT_DEMO_OWNER_PASSWORD"),
+        DEMO_VIEWER_PASSWORD=os.environ.get("TRUSTVAULT_DEMO_VIEWER_PASSWORD"),
     )
     if test_config:
         app.config.update(test_config)
@@ -85,6 +89,72 @@ def create_app(test_config=None):
              details, created, previous, digest))
         conn.commit()
         conn.close()
+
+    def seed_demo():
+        if not app.config["DEMO_SEED_ENABLED"]:
+            return
+
+        passwords = {
+            "demo-admin": app.config["DEMO_ADMIN_PASSWORD"],
+            "demo-owner": app.config["DEMO_OWNER_PASSWORD"],
+            "demo-viewer": app.config["DEMO_VIEWER_PASSWORD"],
+        }
+        if any(not value or len(value) < 12 for value in passwords.values()):
+            raise RuntimeError(
+                "Demo seeding requires TRUSTVAULT_DEMO_ADMIN_PASSWORD, "
+                "TRUSTVAULT_DEMO_OWNER_PASSWORD, and "
+                "TRUSTVAULT_DEMO_VIEWER_PASSWORD with at least 12 characters each."
+            )
+
+        conn = connect_db()
+        if conn.execute("SELECT 1 FROM users LIMIT 1").fetchone():
+            conn.close()
+            return
+
+        created = now()
+        user_ids = {}
+        sample = (
+            b"TrustVault synthetic demonstration file. "
+            b"Contains no real confidential information.\n"
+        )
+        stored_name = secrets.token_hex(24) + ".txt"
+        sample_path = Path(app.config["UPLOAD_DIR"]) / stored_name
+        sample_path.write_bytes(sample)
+        try:
+            conn.execute("BEGIN IMMEDIATE")
+            for username, role in (
+                ("demo-admin", "admin"),
+                ("demo-owner", "owner"),
+                ("demo-viewer", "viewer"),
+            ):
+                cursor = conn.execute(
+                    "INSERT INTO users(username,password_hash,role,created_at) VALUES(?,?,?,?)",
+                    (username, generate_password_hash(passwords[username]), role, created),
+                )
+                user_ids[username] = cursor.lastrowid
+
+            cursor = conn.execute("""INSERT INTO documents
+                (owner_id,title,original_name,stored_name,category,file_size,sha256,created_at,updated_at)
+                VALUES(?,?,?,?,?,?,?,?,?)""",
+                (user_ids["demo-owner"], "Demo: Quarterly planning",
+                 "demo-planning.txt", stored_name, "Demo", len(sample),
+                 hashlib.sha256(sample).hexdigest(), created, created))
+            doc_id = cursor.lastrowid
+            conn.execute("""INSERT INTO grants(document_id,user_id,permission,created_at)
+                VALUES(?,?,?,?)""",
+                (doc_id, user_ids["demo-viewer"], "read", created))
+            conn.commit()
+        except sqlite3.Error:
+            conn.rollback()
+            sample_path.unlink(missing_ok=True)
+            conn.close()
+            raise
+        conn.close()
+
+        audit(user_ids["demo-admin"], "demo_seed", details="Created demo accounts")
+        audit(user_ids["demo-owner"], "upload", doc_id, details="Seeded synthetic demo document")
+        audit(user_ids["demo-owner"], "grant_permission", doc_id,
+              target_user_id=user_ids["demo-viewer"], details="Seeded read grant")
 
     def current_user():
         if "user_id" not in session:
@@ -164,6 +234,10 @@ def create_app(test_config=None):
         if g.user:
             return redirect(url_for("documents"))
         return render_template("index.html")
+
+    @app.route("/healthz")
+    def health_check():
+        return jsonify(status="ok")
 
     @app.route("/register", methods=["GET", "POST"])
     def register():
@@ -539,6 +613,7 @@ def create_app(test_config=None):
 
     with app.app_context():
         init_db()
+        seed_demo()
     return app
 
 app = create_app()
