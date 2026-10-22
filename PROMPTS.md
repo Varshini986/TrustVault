@@ -93,9 +93,24 @@ invented.
   storage/data-loss limitation, seeded only synthetic content when enabled,
   verified viewer login/read access, health response and repeat startup from
   the clone, and reran the 13 existing tests. I did not claim the service is
-  live: connecting the GitHub repository to Render and creating its service
-  still requires the account owner.
+  live at that point: connecting the GitHub repository to Render and creating
+  its service still required the account owner.
 - **Commit:** [25310cf](https://github.com/Varshini986/TrustVault/commit/25310cf2205b0108577260c1b912f5932c4d13a3)
+
+## 2026-10-22 — Deploy and check the live service
+
+- **Asked:** Continue after Render signup and publish the configured Blueprint.
+- **Produced:** Render accepted the public repository's Blueprint and created
+  the free `trustvault-demo` web service.
+- **What was wrong:** The Blueprint form required a name not prefilled from
+  `render.yaml`. The logged-in Render account also had no GitHub provider
+  connection, so repository discovery was empty.
+- **Did instead:** Used Render's public-repository URL option, set the
+  Blueprint name to `TrustVault Demo`, and deployed. Checked the public landing
+  page and `/healthz` response; health returned `{"status":"ok"}`. The app uses
+  generated passwords, so I did not copy those secrets into chat or source.
+  Free-tier local SQLite and uploads remain ephemeral.
+- **Commit:** [15031da](https://github.com/Varshini986/TrustVault/commit/15031da98678a7520946462b72c7eac29bbdabdc)
 
 ## Reused context
 

@@ -1,5 +1,11 @@
 # Render demo deployment
 
+## Current live service
+
+- App: https://trustvault-demo-8fuc.onrender.com/
+- Health: https://trustvault-demo-8fuc.onrender.com/healthz (`{"status":"ok"}` verified)
+- Render service: `trustvault-demo` (free instance)
+
 This blueprint creates a free Render web service for demonstration. It is
 deliberately a **throwaway demo deployment**, not a place for real company
 documents: Render's free service has an ephemeral filesystem, so the SQLite

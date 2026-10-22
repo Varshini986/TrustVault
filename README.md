@@ -118,12 +118,19 @@ This is a hackathon prototype, not a production-certified document vault.
 
 ## Project documentation and remaining delivery
 
+- **Live demo:** https://trustvault-demo-8fuc.onrender.com/
+  The public health check is https://trustvault-demo-8fuc.onrender.com/healthz.
+  Free-tier data is temporary; do not upload real confidential documents.
+- Seeded sign-in usernames: `demo-admin` (administrator), `demo-owner`
+  (document owner), and `demo-viewer` (read-only grantee). Their generated
+  passwords are in the matching `TRUSTVAULT_DEMO_*_PASSWORD` variables in the
+  Render service environment. They are intentionally not published in this
+  public README; use synthetic content only.
 - [API.md](./API.md) documents routes and who may call them.
 - [THREATS.md](./THREATS.md) records mitigations and accepted risks.
 - [PROMPTS.md](./PROMPTS.md) records the available AI-assisted work history.
-- The workspace is a local prototype: no live deployment URL, hosted seed
-  accounts, public Git history, or demo video is supplied. Follow the setup
-  above for a clean local run; do not use real confidential data.
+- See [DEPLOYMENT.md](./DEPLOYMENT.md) for deploy configuration and free-tier
+  limitations. A demo video and submission-form write-up are not included.
 
 ## Deliberately not built
 
