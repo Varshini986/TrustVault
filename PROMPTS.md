@@ -78,6 +78,25 @@ invented.
   dependencies already declared in `requirements.txt`; reran the suite.
 - **Commit:** [4af5f03](https://github.com/Varshini986/TrustVault/commit/4af5f036a8544e59b8de5cb565e864860ef5c3b9)
 
+## 2026-10-22 — Prepare the free Render demo
+
+- **Asked:** Prepare a deployable no-card Flask demo with judge accounts, a
+  sample document and clear operational limits.
+- **Produced:** A Render blueprint, Gunicorn process configuration, a health
+  endpoint and opt-in startup seeding for synthetic admin/owner/viewer
+  accounts. Render generates each demo password; no password is committed.
+- **What was wrong:** Free local storage is ephemeral, so uploaded documents,
+  SQLite rows and the audit chain can disappear on restart or redeploy. My
+  first smoke check also ran from the starter folder instead of the Git clone;
+  `/healthz` returned 404, showing that I had tested the wrong checkout.
+- **Did instead:** Made the target explicitly demo-only, documented the
+  storage/data-loss limitation, seeded only synthetic content when enabled,
+  verified viewer login/read access, health response and repeat startup from
+  the clone, and reran the 13 existing tests. I did not claim the service is
+  live: connecting the GitHub repository to Render and creating its service
+  still requires the account owner.
+- **Commit:** [25310cf](https://github.com/Varshini986/TrustVault/commit/25310cf2205b0108577260c1b912f5932c4d13a3)
+
 ## Reused context
 
 The supplied TrustVault challenge and the existing README/threat model were
