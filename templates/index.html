@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}TrustVault — Secure document vault{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow">SECURE DOCUMENT WORKSPACE</div>
+  <h1>Your documents.<br><span>Your control.</span></h1>
+  <p class="hero-copy">A secure place to store confidential files, decide exactly who can reach them, and keep an accountable record of every action.</p>
+  <div class="hero-actions"><a class="button primary" href="{{ url_for('register') }}">Get started <span>↗</span></a><a class="button secondary" href="{{ url_for('login') }}">Sign in</a></div>
+  <div class="hero-note"><span class="green-dot"></span> Access checked on the server · Private file storage · Auditable actions</div>
+</section>
+<section class="feature-grid">
+  <article class="feature-card"><div class="feature-icon">⌁</div><h3>Precise permissions</h3><p>Grant read or edit access per document, and revoke it when circumstances change.</p></article>
+  <article class="feature-card"><div class="feature-icon">◷</div><h3>Traceable activity</h3><p>Record document actions and denied access attempts in an audit trail.</p></article>
+  <article class="feature-card"><div class="feature-icon">▣</div><h3>Private storage</h3><p>Files are served only through routes that check the current user's authorization.</p></article>
+</section>
+{% endblock %}

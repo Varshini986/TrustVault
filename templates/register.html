@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Create account · TrustVault{% endblock %}
+{% block content %}
+<section class="form-card">
+  <div class="eyebrow">WELCOME TO TRUSTVAULT</div><h1>Create your account</h1>
+  <p class="muted">New accounts start as document owners. Administrators are assigned separately.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Username</label><input name="username" minlength="3" maxlength="30" autocomplete="username" required placeholder="e.g. varshini.dev">
+    <label>Password</label><input type="password" name="password" minlength="12" autocomplete="new-password" required placeholder="At least 12 characters">
+    <button class="button primary full" type="submit">Create account</button>
+  </form>
+  <p class="form-foot">Already registered? <a href="{{ url_for('login') }}">Sign in</a></p>
+</section>
+{% endblock %}

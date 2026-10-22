@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.pytest_cache/
+instance/*.sqlite3
+private_uploads/*
+!.gitkeep
+.env

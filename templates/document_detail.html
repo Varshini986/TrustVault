@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ doc['title'] }} · TrustVault{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('documents') }}">← Back to documents</a>
+<div class="detail-layout"><section class="panel main-panel"><div class="eyebrow">DOCUMENT DETAILS</div><div class="detail-file-icon">▤</div><span class="category">{{ doc['category'] }}</span><h1>{{ doc['title'] }}</h1><p class="muted">{{ doc['original_name'] }}</p>
+<div class="detail-stats"><div><span>OWNER</span><strong>{{ doc['owner_name'] }}</strong></div><div><span>SIZE</span><strong>{{ (doc['file_size']/1024)|round(1) }} KB</strong></div><div><span>UPLOADED</span><strong>{{ doc['created_at'][:10] }}</strong></div></div>
+<div class="hash-box"><span>SHA-256 checksum</span><code>{{ doc['sha256'] }}</code></div>
+<div class="button-row"><a class="button primary" href="{{ url_for('download', doc_id=doc['id']) }}">↓ Download file</a>{% if can_edit %}<a class="button secondary" href="{{ url_for('edit_document', doc_id=doc['id']) }}">Edit details</a>{% endif %}{% if can_manage %}<form method="post" action="{{ url_for('delete_document', doc_id=doc['id']) }}" onsubmit="return confirm('Permanently delete this document?');"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="button danger" type="submit">Delete</button></form>{% endif %}</div>
+</section>
+<aside class="panel permission-panel"><div class="eyebrow">ACCESS CONTROL</div><h2>People with access</h2><p class="muted small">Your permission: <strong>{{ my_permission }}</strong></p>
+{% if can_manage %}
+<form class="grant-form" method="post" action="{{ url_for('change_permission', doc_id=doc['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Grant access to</label><select name="user_id" required><option value="">Choose a user</option>{% for user in users if user['role'] != 'admin' %}<option value="{{ user['id'] }}">{{ user['username'] }} ({{ user['role'] }})</option>{% endfor %}</select><label>Permission</label><select name="permission"><option value="read">Read</option><option value="edit">Edit</option></select><input type="hidden" name="action" value="grant"><button class="button primary full" type="submit">Grant permission</button></form>
+{% endif %}
+{% if can_manage %}<div class="grant-list">{% if grants %}{% for grant in grants %}<div class="grant-row"><div><strong>{{ grant['username'] }}</strong><p class="muted small">{{ grant['permission']|title }} access</p></div><form method="post" action="{{ url_for('change_permission', doc_id=doc['id']) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="user_id" value="{{ grant['user_id'] }}"><input type="hidden" name="action" value="revoke"><button class="revoke-button" type="submit">Revoke</button></form></div>{% endfor %}{% else %}<p class="muted small">No other users have been granted access.</p>{% endif %}</div>{% else %}<p class="muted small">Only the document owner can manage its grants.</p>{% endif %}
+</aside></div>
+{% endblock %}

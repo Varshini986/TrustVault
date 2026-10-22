@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Audit verification · TrustVault{% endblock %}
+{% block content %}
+<section class="form-card"><div class="eyebrow">INTEGRITY CHECK</div><h1>Audit chain verification</h1>
+{% if valid %}<div class="verify-status good">✓ Hash chain verified</div><p class="muted">All {{ count }} audit events match their stored hashes and previous-event links.</p>{% else %}<div class="verify-status bad">! Integrity check failed</div><p class="muted">The audit chain contains a mismatch. Investigate the records and preserve evidence.</p>{% endif %}
+<a class="button secondary full" href="{{ url_for('admin') }}">Return to admin console</a>
+<p class="fine-print">Prototype limitation: hash chaining detects changes but cannot prevent a database administrator or attacker with database write access from rewriting the entire chain. Production systems should export signed checkpoints to independently controlled, append-only storage.</p></section>
+{% endblock %}

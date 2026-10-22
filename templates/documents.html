@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Documents · TrustVault{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR WORKSPACE</div><h1>Documents</h1><p class="muted">Files you own or that have been shared with you.</p></div>
+{% if g.user['role'] in ('owner','admin') %}<a class="button primary" href="{{ url_for('upload') }}">＋ Upload document</a>{% endif %}</div>
+<form class="searchbar" method="get"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Search by document or owner"><select name="category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if c==category %}selected{% endif %}>{{ c }}</option>{% endfor %}</select><label class="small" for="from-date">From</label><input id="from-date" type="date" name="from" value="{{ start_date }}" aria-label="From date"><label class="small" for="to-date">To</label><input id="to-date" type="date" name="to" value="{{ end_date }}" aria-label="To date"><button class="button secondary" type="submit">Search</button></form>
+{% if documents %}
+<div class="document-grid">{% for doc in documents %}
+  <article class="doc-card"><div class="file-icon">▤</div><div class="doc-meta"><span class="category">{{ doc['category'] }}</span><span class="file-size">{{ (doc['file_size']/1024)|round(1) }} KB</span></div>
+  <h3><a href="{{ url_for('document_detail', doc_id=doc['id']) }}">{{ doc['title'] }}</a></h3><p class="muted">Owner: {{ doc['owner_name'] }}</p><p class="muted small">{{ doc['created_at'][:10] }} · {{ doc['original_name'] }}</p>
+  <div class="card-actions"><a href="{{ url_for('document_detail', doc_id=doc['id']) }}">View details ↗</a><a href="{{ url_for('download', doc_id=doc['id']) }}">Download ↓</a></div>
+  </article>
+{% endfor %}</div>
+{% else %}<section class="empty-state"><div class="empty-icon">▤</div><h2>No documents found</h2><p>Try a different search, or upload your first document.</p>{% if g.user['role'] in ('owner','admin') %}<a class="button primary" href="{{ url_for('upload') }}">Upload a document</a>{% endif %}</section>{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TrustVault{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}"><span class="brand-icon">◆</span> TrustVault</a>
+  <nav>
+    {% if g.user %}
+      <a href="{{ url_for('documents') }}">Documents</a>
+      {% if g.user['role'] in ('owner','admin') %}<a href="{{ url_for('upload') }}">Upload</a>{% endif %}
+      {% if g.user['role'] == 'admin' %}<a href="{{ url_for('admin') }}">Admin</a>{% endif %}
+      <span class="user-pill">{{ g.user['username'] }} · {{ g.user['role'] }}</span>
+      <form class="inline" action="{{ url_for('logout') }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="nav-button" type="submit">Sign out</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login') }}">Sign in</a><a class="nav-cta" href="{{ url_for('register') }}">Create account</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}<section class="flash-stack" aria-live="polite">
+      {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+    </section>{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">TrustVault · Private by design · Hackathon prototype</footer>
+</body>
+</html>
